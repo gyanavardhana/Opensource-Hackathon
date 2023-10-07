@@ -1,12 +1,55 @@
+/* Todo List */
 const addbut = document.getElementById('Add');
 addbut.addEventListener('click', ()=>{
-   const newone = document.createElement('li');
-   const te = document.getElementById('task');
-   newone.innerText =  te.value.trim();
-   te.innerText = '';
-   const myt = document.getElementById('mylist');
-   myt.appendChild(newone);
+   pressbutton(addbut,mylist);
 });
+const saddbut = document.getElementById('second');
+saddbut.addEventListener('click', ()=>{
+   pressbutton(saddbut,mylist2);
+});
+const mylist = document.getElementById('mylist');
+if(mylist){
+   mylist.addEventListener('click', (event)=>{
+      if(event.target.tagName=='INPUT'){
+         deletebutton(event.target.id,mylist)
+      }
+   });
+}
+const mylist2 = document.getElementById('mylist2');
+if(mylist2){
+   mylist2.addEventListener('click', (event)=>{
+      if(event.target.tagName=='INPUT'){
+         deletebutton(event.target.id,mylist2)
+      }
+   });
+}
+
+function deletebutton(name,mylist){
+   const child =document.getElementById(name);
+   mylist.removeChild(child.parentElement);
+}
+function pressbutton(addbut,mylist){
+   this.addbut = addbut;
+   this.mylist = mylist;
+   addbut.addEventListener('click', ()=>{
+      const newdiv = document.createElement('div');
+      const te = document.getElementById('task');
+      if(te.value!=''){
+         const newli = document.createElement('li');
+         const check = document.createElement('input');
+         check.type = 'checkbox';
+         newli.textContent =  te.value.trim();
+         newli.id = te.value.trim();
+         check.id = te.value.trim();
+         te.value = '';
+         newdiv.appendChild(newli);
+         newdiv.appendChild(check);
+         newdiv.style.display = 'flex';
+         mylist.appendChild(newdiv);
+      }
+   });
+}
+/* Todo List */
 /*Pomodoro*/
 const timerDisplay = document.getElementById("timer");
 
