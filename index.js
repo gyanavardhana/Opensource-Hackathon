@@ -98,84 +98,215 @@ function removeFromLocalStorage(storageKey, taskId) {
 
 /* Todo List */
 /*Pomodoro*/
+function sendTimerSettings(worktime, breaktime) {
+  chrome.runtime.sendMessage({ worktime, breaktime });
+}
+
 const timerDisplay = document.getElementById("timer");
+let worktime = 25;
+let breaktime = 5;
+let timer = new PomodorTimer(worktime, breaktime); // Initialize the timer
+
+const customizeButton = document.createElement("button");
+customizeButton.textContent = "Customize";
+document.body.appendChild(customizeButton);
+
+const customizeOptions = document.createElement("div");
+customizeOptions.style.display = "none";
+customizeOptions.innerHTML = `
+  <label for="workTime">Work Time (minutes):</label>
+  <input type="number" id="workTime" min="1" value="25">
+  <br>
+  <label for="breakTime">Break Time (minutes):</label>
+  <input type="number" id="breakTime" min="1" value="5">
+  <button id="applyButton">Apply</button>
+`;
+document.body.appendChild(customizeOptions);
+
+const workTimeInput = document.getElementById("workTime");
+const breakTimeInput = document.getElementById("breakTime");
+const applyButton = document.getElementById("applyButton");
+
+customizeButton.addEventListener("click", () => {
+  if (customizeOptions.style.display === "none" || customizeOptions.style.display === "") {
+      customizeOptions.style.display = "block";
+  } else {
+      customizeOptions.style.display = "none";
+  }
+});
+
+applyButton.addEventListener('click', () => {
+  const newWorktime = parseInt(workTimeInput.value);
+  const newBreaktime = parseInt(breakTimeInput.value);
+  if (!isNaN(newWorktime) && !isNaN(newBreaktime)) {
+      worktime = newWorktime;
+      breaktime = newBreaktime;
+      timer = new PomodorTimer(worktime, breaktime); // Create a new timer with customized values
+      sendTimerSettings(worktime, breaktime); // Send new timer settings to background.js
+      updateTimerDisplay();
+      customizeOptions.style.display = "none";
+  } else {
+      alert("Please enter valid numeric values for work and break times.");
+  }
+});
 
 function PomodorTimer(worktime, breaktime) {
-    this.worktime = worktime * 60;
-    this.breaktime = breaktime * 60;
-    this.timer = 0;
-    this.interval = null;
+  this.worktime = worktime * 60;
+  this.breaktime = breaktime * 60;
+  this.timer = 0;
+  this.interval = null;
 }
 
 PomodorTimer.prototype.startWork = function () {
-    if (this.timer === 0) {
-        this.timer = this.worktime;
-    }
-    clearInterval(this.interval);
-    this.interval = setInterval(() => {
-        this.timer--;
-        if (this.timer === 0) {
-            clearInterval(this.interval);
-            this.startBreak();
-        }
-        updateTimerDisplay();
-    }, 1000);
+  if (this.timer === 0) {
+      this.timer = this.worktime;
+  }
+  clearInterval(this.interval);
+  this.interval = setInterval(() => {
+      this.timer--;
+      if (this.timer === 0) {
+          clearInterval(this.interval);
+          this.startBreak();
+      }
+      updateTimerDisplay();
+  }, 1000);
 };
 
 PomodorTimer.prototype.startBreak = function () {
-    if (this.timer === 0) {
-        this.timer = this.breaktime;
-    }
-    clearInterval(this.interval);
-    this.interval = setInterval(() => {
-        this.timer--;
-        if (this.timer === 0) {
-            clearInterval(this.interval);
-            this.startWork();
-        }
-        updateTimerDisplay();
-    }, 1000);
+  if (this.timer === 0) {
+      this.timer = this.breaktime;
+  }
+  clearInterval(this.interval);
+  this.interval = setInterval(() => {
+      this.timer--;
+      if (this.timer === 0) {
+          clearInterval(this.interval);
+          this.startWork();
+      }
+      updateTimerDisplay();
+  }, 1000);
 };
 
 PomodorTimer.prototype.stop = function () {
-    clearInterval(this.interval);
+  clearInterval(this.interval);
 };
 
 PomodorTimer.prototype.reset = function () {
-    clearInterval(this.interval);
-    this.timer = 0;
-    updateTimerDisplay();
+  this.timer = this.worktime; // Reset the timer to the work time
+  clearInterval(this.interval);
+  updateTimerDisplay();
 };
 
-const timer = new PomodorTimer(25, 5);
-
 function updateTimerDisplay() {
-    const minutes = Math.floor(timer.timer / 60);
-    const seconds = timer.timer % 60;
-    timerDisplay.textContent = `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+  const minutes = Math.floor(timer.timer / 60);
+  const seconds = timer.timer % 60;
+  timerDisplay.textContent = `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
 }
 
 const start = document.createElement("button");
 start.textContent = "Start";
 start.addEventListener("click", () => {
-    timer.startWork();
+  timer.startWork();
 });
 
 const stop = document.createElement("button");
 stop.textContent = "Stop";
 stop.addEventListener("click", () => {
-    timer.stop();
+  timer.stop();
 });
 
 const reset = document.createElement("button");
 reset.textContent = "Reset";
 reset.addEventListener("click", () => {
-        timer.reset();
+  timer.reset();
 });
+const customize=document.createElement("button");
+customize.textContent= "Customize";
 
 document.body.appendChild(start);
 document.body.appendChild(stop);
 document.body.appendChild(reset);
+
+/*Music player*/
+
+document.addEventListener('DOMContentLoaded', function () {
+  const playButton = document.getElementById('Addplay');
+  const listDiv = document.getElementById('list');
+  const played = document.getElementById('song');
+  const alternateNameInput = document.getElementById('alternateName');
+  
+  // Initialize playlists from storage
+  chrome.storage.local.get(['playlists'], function (result) {
+    const playlists = result.playlists || [];
+    renderPlaylists(playlists);
+  });
+
+  function renderPlaylists(playlists) {
+    listDiv.innerHTML = ''; // Clear the existing list
+
+    for (const playlist of playlists) {
+      const containerDiv = document.createElement('div');
+      containerDiv.className = 'playlist-item';
+
+      const anchor = document.createElement('a');
+      anchor.textContent = playlist.alternateName;
+      anchor.href = playlist.playlistUrl;
+      anchor.target = '_blank';
+
+      containerDiv.appendChild(anchor);
+
+      const playButton = document.createElement('button');
+      playButton.textContent = 'Play';
+      playButton.addEventListener('click', () => {
+        const newTab = window.open(playlist.playlistUrl, 'noreferrer');
+      });
+      containerDiv.appendChild(playButton);
+
+      const deleteButton = document.createElement('button');
+      deleteButton.textContent = 'Delete';
+      deleteButton.addEventListener('click', () => {
+        // Remove the playlist from storage and re-render the list
+        const updatedPlaylists = playlists.filter(p => p.playlistUrl !== playlist.playlistUrl);
+        chrome.storage.local.set({ playlists: updatedPlaylists }, function () {
+          renderPlaylists(updatedPlaylists);
+        });
+      });
+      containerDiv.appendChild(deleteButton);
+
+      listDiv.appendChild(containerDiv);
+    }
+  }
+
+  playButton.addEventListener('click', () => {
+    const playlistUrl = played.value.trim();
+    const alternateName = alternateNameInput.value.trim();
+    const playlistRegex = /^https?:\/\/(www\.)?youtube\.com\/playlist\?list=[A-Za-z0-9_-]+$/;
+
+    if (playlistRegex.test(playlistUrl) && alternateName !== '') {
+      const autoplayPlaylistUrl = `${playlistUrl}&autoplay=1`;
+
+      // Retrieve existing playlists from storage
+      chrome.storage.local.get(['playlists'], function (result) {
+        const playlists = result.playlists || [];
+        const newPlaylist = { playlistUrl: autoplayPlaylistUrl, alternateName };
+
+        // Add the new playlist and save it to storage
+        playlists.push(newPlaylist);
+        chrome.storage.local.set({ playlists }, function () {
+          renderPlaylists(playlists); // Re-render the playlist list
+        });
+
+        // Clear input fields
+        played.value = '';
+        alternateNameInput.value = '';
+      });
+    } else if (!playlistRegex.test(playlistUrl)) {
+      alert('Please enter a valid YouTube playlist URL.');
+    } else if (alternateName === '') {
+      alert('Please provide an alternate name.');
+    }
+  });
+});
 
 
 /*Pomodoro*/
