@@ -93,9 +93,6 @@ function removeFromLocalStorage(storageKey, taskId) {
   const updatedTasks = tasks.filter((task) => task !== taskId);
   localStorage.setItem(storageKey, JSON.stringify(updatedTasks));
 }
-
-
-
 /* Todo List */
 /*Pomodoro*/
 function sendTimerSettings(worktime, breaktime) {
@@ -307,14 +304,12 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   });
 });
-
-
 /*Pomodoro*/
 /*blocking of navigation to unwanted sights*/
 // List of blocked hostnames (e.g., Facebook and Twitter)
 /*chrome.webNavigation.onCommitted.addListener(function(details) {
     if (details.url.startsWith('https://www.youtube.com/')) {
-        alert("yipekayeee mf");
+        alert("You are on blocked site!.");
         chrome.tabs.update(details.tabId, {url: "https://mail.google.com/mail/u/0/#inbox"});
 }
 });
@@ -326,23 +321,23 @@ function getg(details){
 
 function block(details){
     if (details.url.startsWith('https://www.youtube.com/')) {
-        alert("yipekayeee mf");
+        alert("You are on blocked site!.");
         chrome.tabs.update(details.tabId, {url: "test.html"});
     }
     if (details.url.startsWith('https://www.facebook.com/')) {
-        alert("yipekayeee mf");
+        alert("You are on blocked site!.");
         chrome.tabs.update(details.tabId, {url: "test.html"});
     }
     if (details.url.startsWith('https://www.instagram.com/')) {
-        alert("yipekayeee mf");
+        alert("You are on blocked site!.");
         chrome.tabs.update(details.tabId, {url: "test.html"});
     }
     if (details.url.startsWith('https://www.twitter.com/')) {
-        alert("yipekayeee mf");
+        alert("You are on blocked site!.");
         chrome.tabs.update(details.tabId, {url: "test.html"});
     }
     if (details.url.startsWith('https://www.netflix.com/')) {
-        alert("yipekayeee mf");
+        alert("You are on blocked site!.");
         chrome.tabs.update(details.tabId, {url: "test.html"});
     }
 }

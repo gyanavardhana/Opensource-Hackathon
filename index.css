@@ -1,0 +1,95 @@
+:root{
+    /* Colors */
+    --color1: #f5f5f5;
+    --color2: #333;
+    --color3: #ccc;
+    --color4: #00c898;
+    --color5: #d507c7;
+    /* Colors */
+
+    /* Fonts */
+    --font1: 'Roboto', sans-serif;
+    --font2: Georgia, 'Times New Roman', Times, serif;
+    /* Fonts */
+}
+body{
+    width: 400px;
+    background-color: var(--color1);
+    height: 100%;
+    display: inline-flexbox;
+    background-image: url(bg3.png);
+    background-size: cover;
+}
+
+h1{
+    font-family: var(--font1);
+    font-size: 30px;
+    color: var(--color2);
+}
+h3{
+    font-family: var(--font2);
+}
+li{
+    font-size: 15px;
+    margin-top: 8px;
+    margin-right: 40px;
+    font-family: var(--font1);
+    color: var(--color2);
+    width: 80%;
+}
+input[type="checkbox"] {
+    cursor: pointer;
+    border-radius: 50%;
+}
+p,small{
+    font-family: var(--font1);
+    font-style: italic;
+    font-size: 15px;
+    color: var(--color2);
+    margin-top:20px;
+}
+button {
+    cursor: pointer;
+    border: 1px solid var(--color3);
+    border-radius: 10px;
+    margin: 5px 2px;
+    background-color: var(--color4); 
+    color: black; 
+    font-size: 16px;
+    transition: background-color 0.2s, color 0.3s; 
+}
+button:hover {
+    background-color: var(--color5); 
+}
+.taskenter, .playenter{
+    width: 40%;
+    border: 3px solid var(--color2);
+    border-radius: 10px;
+    padding: 0 10px;
+    font-size: 16px;
+    box-sizing: border-box;
+    background: transparent;
+}
+.taskenter::placeholder, .playenter::placeholder{
+    text-align: center;
+}
+
+.timer{
+    margin-top: -10px;
+    margin-bottom: 10px;
+    font-family: var(--font1);
+    font-size: 30px;
+    color: var(--color2);
+}
+.playlist-item{
+    display: flex;
+    justify-content: flex-start;
+}
+.playlist-item a{
+    text-decoration: none;
+    font-size: 15px;
+    margin-top: 8px;
+    margin-right: 40px;
+    font-family: var(--font1);
+    color: var(--color2);
+}
