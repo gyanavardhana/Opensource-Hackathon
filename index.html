@@ -1,10 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" >
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="utf-8">
     <title>Document</title>
-    <link rel = "stylesheet" href = "index.css">
+    <link rel="stylesheet"  href="index.css">
 </head>
 <body>
     <div class="Todo">
@@ -12,15 +11,29 @@
             <h1>Todo List</h1>
         </div>
         <div class="TodoInput">
-            <input type="text" id="task" placeholder="Enter your todo">
-            <button id="Add">Add</button>
+            <input class="taskenter" type="text" id="task" placeholder="Enter your todo">
+            <button id="Add">primary add</button>
+            <button id="second">secondary add</button>
         <div class="TodoList">
+            <h3>Primary Tasks</h3>
             <ul id="mylist">
-                
+            </ul>
+            <h3>Secondary Tasks</h3>
+            <ul id="mylist2">
             </ul>
         </div>
     </div>
     </div>
+    <h1>Music Player</h1>
+    <input class="playenter" type="text" id="song" placeholder="Playlist URL">
+    <input class="playenter" type="text" id="alternateName" placeholder="Name">
+    <button id="Addplay">Add</button>
+    <ul id="list"></ul>
+    <div id="formotivation">
+        <h1>Quote of the day.</h1>
+    </div>
+    <h1>Pomodore</h1>
+    <div class="timer" id="timer">00:00</div>
     <script src="index.js"></script>
 </body>
 </html>
